@@ -14,7 +14,8 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 @Configuration
 @PropertySource("classpath:db.properties")
-@ComponentScan(basePackages = {"com.dev.spring.service", "com.dev.spring.dao"})
+@ComponentScan(basePackages = {"com.dev.spring.service", "com.dev.spring.dao",
+        "com.dev.spring.controller"})
 public class AppConfig {
     private final Environment environment;
 
