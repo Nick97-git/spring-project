@@ -4,7 +4,10 @@ import com.dev.spring.dao.UserDao;
 import com.dev.spring.exception.DataProcessingException;
 import com.dev.spring.model.User;
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -53,6 +56,20 @@ public class UserDaoImpl implements UserDao {
             return session.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
             throw new DataProcessingException("Can't get list of users", e);
+        }
+    }
+
+    @Override
+    public User get(Long userId) {
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
+            Predicate userPredicate = criteriaBuilder.equal(root.get("id"), userId);
+            criteriaQuery.where(userPredicate);
+            return session.createQuery(criteriaQuery).uniqueResult();
+        } catch (Exception e) {
+            throw new DataProcessingException("Can't get user with id = " + userId, e);
         }
     }
 }
