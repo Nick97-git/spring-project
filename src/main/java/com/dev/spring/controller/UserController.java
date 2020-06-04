@@ -1,6 +1,6 @@
 package com.dev.spring.controller;
 
-import com.dev.spring.UserResponseDto;
+import com.dev.spring.dto.UserResponseDto;
 import com.dev.spring.model.User;
 import com.dev.spring.service.UserService;
 import java.util.List;
@@ -32,15 +32,21 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public UserResponseDto getUser(@PathVariable Long userId) {
-        User user = userService.get(userId);
-        return new UserResponseDto(user.getEmail(), user.getPassword());
+        return getUserDto(userService.get(userId));
     }
 
-    @GetMapping("/")
+    @GetMapping
     public List<UserResponseDto> getAll() {
         List<User> users = userService.listUsers();
         return users.stream()
-                .map(user -> new UserResponseDto(user.getEmail(), user.getPassword()))
+                .map(this::getUserDto)
                 .collect(Collectors.toList());
+    }
+
+    private UserResponseDto getUserDto(User user) {
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setEmail(user.getEmail());
+        userResponseDto.setPassword(user.getPassword());
+        return userResponseDto;
     }
 }

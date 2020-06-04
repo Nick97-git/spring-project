@@ -1,13 +1,8 @@
-package com.dev.spring;
+package com.dev.spring.dto;
 
 public class UserResponseDto {
     private String email;
     private String password;
-
-    public UserResponseDto(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
 
     public String getEmail() {
         return email;
